@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title layout:title-pattern="$CONTENT_TITLE - UTEShop">UTEShop</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <main layout:fragment="content" class="container">
+    </main>
+
+    <footer>
+        <p>Copyright © UTEShop - Bài tập Ví dụ 2 (Spring Boot 4 + Security 7)</p>
+    </footer>
+</body>
+</html>

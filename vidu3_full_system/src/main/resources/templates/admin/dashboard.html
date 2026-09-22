@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="card">
+        <h1 style="color: #0f172a; margin-top: 0;">Bảng Điều Khiển Quản Trị Hệ Thống (Dashboard)</h1>
+        <p style="color: #64748b;">Tổng quan số liệu thống kê và quản lý người dùng, sản phẩm toàn hệ thống.</p>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stat-grid">
+        <div class="stat-card">
+            <h3>Tổng số người dùng</h3>
+            <div class="value" th:text="${totalUsers}">0</div>
+            <a th:href="@{/users}" style="font-size: 13px; color: #2563eb; text-decoration: none;">Quản lý users →</a>
+        </div>
+        <div class="stat-card green">
+            <h3>Tổng số sản phẩm</h3>
+            <div class="value" th:text="${totalProducts}">0</div>
+            <a th:href="@{/products}" style="font-size: 13px; color: #10b981; text-decoration: none;">Xem danh mục →</a>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2 style="margin: 0;">Người dùng mới đăng ký</h2>
+            <a th:href="@{/users}" class="btn primary small">Xem toàn bộ</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Họ và tên</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${recentUsers}">
+                    <td th:text="${u.id}"></td>
+                    <td><strong th:text="${u.username}"></strong></td>
+                    <td th:text="${u.fullName}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td>
+                        <span th:class="'badge ' + (${u.roleName == 'ROLE_ADMIN'} ? 'admin' : 'user')" th:text="${u.roleName}"></span>
+                    </td>
+                    <td>
+                        <span th:class="'badge ' + (${u.enabled} ? 'active' : 'inactive')" th:text="${u.enabled ? 'Đã kích hoạt' : 'Chưa kích hoạt'}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Products -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2 style="margin: 0;">Sản phẩm mới thêm gần đây</h2>
+            <a th:href="@{/products}" class="btn primary small">Xem toàn bộ</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Hãng</th>
+                    <th>Giá</th>
+                    <th>Người đăng</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${recentProducts}">
+                    <td th:text="${p.id}"></td>
+                    <td><strong th:text="${p.name}"></strong></td>
+                    <td th:text="${p.brand}"></td>
+                    <td th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                    <td th:text="${p.userName}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>

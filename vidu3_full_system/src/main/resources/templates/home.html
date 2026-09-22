@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Trang chủ</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
+        <h1 style="color: #38bdf8; margin-top: 0;">Chào mừng bạn đến với UTEShop Pro!</h1>
+        <p style="font-size: 16px; color: #cbd5e1; max-width: 800px; line-height: 1.6;">
+            Hệ thống Quản lý Sản phẩm và Người dùng hoàn chỉnh phát triển với Spring Boot 4.1.1, Spring Security 7, 
+            MapStruct, Thymeleaf Layout Dialect, hỗ trợ Upload ảnh Cloudinary, Đăng ký xác thực OTP Gmail, Quên mật khẩu qua mail.
+        </p>
+
+        <div sec:authorize="isAuthenticated()" style="margin-top: 15px;">
+            <p>Xin chào: <strong style="color: #38bdf8;" th:text="${#authentication.principal.fullName}">User</strong> 
+               (<span th:text="${#authentication.principal.username}"></span>)</p>
+            <a th:href="@{/products/new}" class="btn success">+ Đăng bán sản phẩm mới</a>
+            <a th:href="@{/my-products}" class="btn secondary" style="margin-left: 10px;">Sản phẩm của tôi</a>
+        </div>
+
+        <div sec:authorize="!isAuthenticated()" style="margin-top: 15px;">
+            <a th:href="@{/login}" class="btn primary">Đăng nhập</a>
+            <a th:href="@{/register}" class="btn success" style="margin-left: 10px;">Tạo tài khoản</a>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stat-grid">
+        <div class="stat-card">
+            <h3>Tổng số người dùng</h3>
+            <div class="value" th:text="${totalUsers}">0</div>
+        </div>
+        <div class="stat-card green">
+            <h3>Tổng số sản phẩm</h3>
+            <div class="value" th:text="${totalProducts}">0</div>
+        </div>
+        <div class="stat-card purple" sec:authorize="isAuthenticated()">
+            <h3>Sản phẩm của bạn</h3>
+            <div class="value" th:text="${userProductCount != null ? userProductCount : 0}">0</div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0;">Sản phẩm mới nhất</h2>
+            <a th:href="@{/products}" style="color: #2563eb; text-decoration: none; font-weight: 600;">Xem tất cả →</a>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card" th:each="p : ${latestProducts}">
+                <img th:src="${p.images != null and !#strings.isEmpty(p.images) ? p.images : '/images/default-product.png'}" alt="Product image">
+                <div class="product-card-body">
+                    <h3 th:text="${p.name}">Tên sản phẩm</h3>
+                    <div style="font-size: 13px; color: #64748b; margin-bottom: 8px;">
+                        Hãng: <span th:text="${p.brand}"></span> · Xuất xứ: <span th:text="${p.madein}"></span>
+                    </div>
+                    <div class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">100.000 VNĐ</div>
+                    <div style="font-size: 12px; color: #94a3b8; margin-top: auto;">
+                        Người đăng: <strong th:text="${p.userName}"></strong>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <a th:href="@{/products/detail/{id}(id=${p.id})}" class="btn primary small full" style="text-align: center;">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

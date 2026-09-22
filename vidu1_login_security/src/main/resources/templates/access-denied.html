@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Truy cập bị từ chối')}"></head>
+<body class="auth-page">
+<div class="auth-card">
+    <h1 style="color: #dc2626;">403 - Access Denied</h1>
+    <p>Bạn không có quyền truy cập vào tài nguyên này!</p>
+    <a th:href="@{/}" class="btn primary full">Quay lại Trang Chủ</a>
+</div>
+</body>
+</html>

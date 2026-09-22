@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layouts/layout :: head('Admin Dashboard - Ví dụ 1')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="container">
+    <div class="card">
+        <h1 style="color: #dc2626;">Bảng Điều Khiển Quản Trị Viên (Admin Dashboard)</h1>
+        <p>Chỉ tài khoản có quyền <code>ROLE_ADMIN</code> mới được phép truy cập trang này.</p>
+        <p>Xin chào: <strong sec:authentication="name">Admin</strong></p>
+        <div style="margin-top: 20px;">
+            <a th:href="@{/}" class="btn primary">Về trang chủ</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

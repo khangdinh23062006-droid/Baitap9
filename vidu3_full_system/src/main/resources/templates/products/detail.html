@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title th:text="${product.name}">Chi tiết sản phẩm</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="card" style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+            <img th:src="${product.images != null and !#strings.isEmpty(product.images) ? product.images : '/images/default-product.png'}"
+                 style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0;">
+        </div>
+
+        <div style="flex: 1.5; min-width: 300px; display: flex; flex-direction: column;">
+            <h1 style="margin-top: 0;" th:text="${product.name}">Tên sản phẩm</h1>
+            <div class="price" style="font-size: 28px;" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">100.000 VNĐ</div>
+
+            <div style="line-height: 2; margin: 15px 0;">
+                <div>Hãng sản xuất: <strong th:text="${product.brand}"></strong></div>
+                <div>Nơi xuất xứ: <strong th:text="${product.madein}"></strong></div>
+                <div>Người đăng bán: <strong th:text="${product.userName}"></strong></div>
+                <div>Ngày đăng: <span th:text="${#temporals.format(product.createdAt, 'dd/MM/yyyy HH:mm')}"></span></div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <h3>Mô tả sản phẩm</h3>
+                <p style="color: #475569; line-height: 1.6;" th:text="${product.description}">Mô tả chi tiết</p>
+            </div>
+
+            <div style="margin-top: auto; display: flex; gap: 10px; padding-top: 20px;">
+                <a th:href="@{/products}" class="btn secondary">← Quay lại danh sách</a>
+                <a sec:authorize="isAuthenticated()"
+                   th:if="${#authentication.principal.role == 'ROLE_ADMIN' or #authentication.principal.id == product.userId}"
+                   th:href="@{/products/edit/{id}(id=${product.id})}" class="btn primary">Chỉnh sửa sản phẩm</a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

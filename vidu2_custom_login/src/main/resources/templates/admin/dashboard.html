@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="card">
+        <h1 style="color: #dc2626;">Khu Vực Quản Trị Hệ Thống (Ví dụ 2)</h1>
+        <p>Chỉ tài khoản sở hữu vai trò <code>ROLE_ADMIN</code> mới truy cập được đường dẫn này.</p>
+        <p>Quản trị viên đang đăng nhập: <strong th:text="${#authentication.principal.fullName}">Admin</strong></p>
+        <div style="margin-top: 20px;">
+            <a th:href="@{/}" class="btn primary">Về trang chủ</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Danh sách sản phẩm</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h1 style="margin: 0;" th:text="${isMyProducts ? 'Sản Phẩm Của Tôi' : 'Danh Sách Sản Phẩm'}">Sản Phẩm</h1>
+                <p style="color: #64748b; margin: 5px 0 0;">Tổng số: <strong th:text="${totalProducts}"></strong> sản phẩm</p>
+            </div>
+            <a sec:authorize="isAuthenticated()" th:href="@{/products/new}" class="btn success">+ Đăng bán sản phẩm mới</a>
+        </div>
+
+        <!-- Search box -->
+        <form th:action="${isMyProducts ? '/my-products' : '/products'}" method="get" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm theo tên sản phẩm, hãng hoặc nơi xuất xứ..." class="form-control" style="flex: 1;">
+            <button type="submit" class="btn primary">Tìm kiếm</button>
+            <a th:if="${keyword != null and keyword != ''}" th:href="${isMyProducts ? '/my-products' : '/products'}" class="btn secondary">Đặt lại</a>
+        </form>
+
+        <div class="product-grid">
+            <div class="product-card" th:each="p : ${products.content}">
+                <img th:src="${p.images != null and !#strings.isEmpty(p.images) ? p.images : '/images/default-product.png'}" alt="Product image">
+                <div class="product-card-body">
+                    <h3 th:text="${p.name}">Tên sản phẩm</h3>
+                    <div style="font-size: 13px; color: #64748b; margin-bottom: 8px;">
+                        Hãng: <strong th:text="${p.brand}"></strong> · Xuất xứ: <span th:text="${p.madein}"></span>
+                    </div>
+                    <div class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">100.000 VNĐ</div>
+                    <div style="font-size: 12px; color: #94a3b8; margin-top: auto;">
+                        Người đăng: <strong th:text="${p.userName}"></strong>
+                    </div>
+
+                    <div style="margin-top: 15px; display: flex; gap: 8px;">
+                        <a th:href="@{/products/detail/{id}(id=${p.id})}" class="btn primary small" style="flex: 1; text-align: center;">Chi tiết</a>
+                        
+                        <a sec:authorize="isAuthenticated()"
+                           th:if="${#authentication.principal.role == 'ROLE_ADMIN' or #authentication.principal.id == p.userId}"
+                           th:href="@{/products/edit/{id}(id=${p.id})}" class="btn secondary small">Sửa</a>
+
+                        <a sec:authorize="isAuthenticated()"
+                           th:if="${#authentication.principal.role == 'ROLE_ADMIN' or #authentication.principal.id == p.userId}"
+                           th:href="@{/products/delete/{id}(id=${p.id})}" class="btn danger small"
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${products.totalElements == 0}" style="text-align: center; color: #64748b; padding: 40px;">
+            <p style="font-size: 16px;">Không tìm thấy sản phẩm nào!</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" th:if="${products.totalPages > 1}">
+            <a th:if="${products.hasPrevious()}" th:href="@{${isMyProducts ? '/my-products' : '/products'}(page=${products.number - 1}, keyword=${keyword})}">« Trước</a>
+            <span th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}">
+                <a th:href="@{${isMyProducts ? '/my-products' : '/products'}(page=${i}, keyword=${keyword})}"
+                   th:class="${i == products.number ? 'active' : ''}" th:text="${i + 1}"></a>
+            </span>
+            <a th:if="${products.hasNext()}" th:href="@{${isMyProducts ? '/my-products' : '/products'}(page=${products.number + 1}, keyword=${keyword})}">Sau »</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

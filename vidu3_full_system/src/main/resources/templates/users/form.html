@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title th:text="${userDTO.id != null ? 'Chỉnh sửa người dùng' : 'Thêm người dùng mới'}">Người dùng</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="card" style="max-width: 650px; margin: 0 auto;">
+        <h1 th:text="${userDTO.id != null ? 'Chỉnh sửa Người Dùng' : 'Thêm Người Dùng Mới'}"></h1>
+
+        <form th:action="@{/users/save}" th:object="${userDTO}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <div style="margin-bottom: 15px;">
+                <label>Username</label>
+                <input type="text" th:field="*{username}" class="form-control"
+                       th:readonly="${userDTO.id != null}" required>
+                <div style="color: red; font-size: 12px;" th:errors="*{username}"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label>Họ và tên</label>
+                <input type="text" th:field="*{fullName}" class="form-control" required>
+                <div style="color: red; font-size: 12px;" th:errors="*{fullName}"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label>Email</label>
+                <input type="email" th:field="*{email}" class="form-control" required>
+                <div style="color: red; font-size: 12px;" th:errors="*{email}"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;" th:if="${userDTO.id == null}">
+                <label>Mật khẩu</label>
+                <input type="password" name="password" class="form-control" placeholder="Tối thiểu 6 ký tự" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label>Vai trò (Role)</label>
+                <select name="roleId" class="form-control" required>
+                    <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}"
+                            th:selected="${userDTO.roleId != null and userDTO.roleId == r.id}"></option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label>Trạng thái</label>
+                <select th:field="*{enabled}" class="form-control">
+                    <option th:value="true">Kích hoạt (Hoạt động bình thường)</option>
+                    <option th:value="false">Khóa tài khoản</option>
+                </select>
+            </div>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button type="submit" class="btn primary">Lưu thông tin</button>
+                <a th:href="@{/users}" class="btn secondary">Quay lại danh sách</a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>
